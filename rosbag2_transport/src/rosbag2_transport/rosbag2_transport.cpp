@@ -15,7 +15,6 @@
 
 #include "rosbag2_transport/rosbag2_transport.hpp"
 
-#include <csignal>
 #include <memory>
 #include <queue>
 #include <string>
@@ -60,10 +59,6 @@ Rosbag2Transport::Rosbag2Transport(
 void Rosbag2Transport::init()
 {
   rclcpp::init(0, nullptr);
-  std::signal(
-    SIGTERM, [](int /* signal */) {
-      rclcpp::shutdown();
-    });
 }
 
 void Rosbag2Transport::shutdown()

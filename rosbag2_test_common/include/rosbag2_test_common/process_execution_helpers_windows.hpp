@@ -21,7 +21,6 @@
 #include <Windows.h>
 
 #include <chrono>
-#include <csignal>
 #include <cstdlib>
 #include <string>
 #include <thread>
@@ -105,10 +104,8 @@ ProcessHandle start_execution(const std::string & command)
   return process;
 }
 
-void stop_execution(const ProcessHandle & handle, int signum = SIGINT)
+void stop_execution(const ProcessHandle & handle)
 {
-  // Match the Unix version by allowing for int signum argument - however Windows does not have
-  // Linux signals in the same way, so there isn't a 1:1 mapping to dispatch e.g. SIGTERM
   DWORD exit_code;
   GetExitCodeProcess(handle.process_info.hProcess, &exit_code);
   // 259 indicates that the process is still active: we want to make sure that the process is
