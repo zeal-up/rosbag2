@@ -97,13 +97,23 @@ public:
     typename rclcpp::Client<Srv>::SharedPtr cli,
     typename Srv::Request::SharedPtr request)
   {
-    auto future = cli->async_send_request(request);
-    EXPECT_EQ(future.wait_for(service_call_timeout_), std::future_status::ready);
-    EXPECT_TRUE(future.valid());
-    auto result = std::make_shared<typename Srv::Response>();
-    EXPECT_NO_THROW({result = future.get();});
-    EXPECT_TRUE(result);
-    return result;
+    // TODO(clalancette): Some rmw implementations (notably rmw_fasrtps_cpp) have
+    // unreliable services.  Try more than once here in an attempt to make these
+    // tests less flaky.
+    for (int i = 0; i < 10; ++i) {
+      auto future = cli->async_send_request(request);
+      if (future.wait_for(service_call_timeout_) == std::future_status::ready) {
+        EXPECT_TRUE(future.valid());
+        auto result = std::make_shared<typename Srv::Response>();
+        EXPECT_NO_THROW({result = future.get();});
+        EXPECT_TRUE(result);
+        return result;
+      }
+    }
+    EXPECT_FALSE(true);
+
+    // Never reached, but just to quiet the compiler
+    return std::make_shared<typename Srv::Response>();
   }
 
   template<typename Srv>
