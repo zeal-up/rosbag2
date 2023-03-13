@@ -337,6 +337,16 @@ void Recorder::subscribe_topics(
 
 void Recorder::subscribe_topic(const rosbag2_storage::TopicMetadata & topic)
 {
+  auto endpoints = get_publishers_info_by_topic(topic.name);
+  RCLCPP_INFO_STREAM(this->get_logger(), "Topic " << topic.name);
+  for (const auto & info : endpoints) {
+    std::stringstream ss;
+    const auto & hash = info.topic_type_hash();
+    char * str = nullptr;
+    rosidl_stringify_type_hash(&hash, rcutils_get_default_allocator(), &str);
+    RCLCPP_INFO_STREAM(get_logger(), "  " << str);
+  }
+
   // Need to create topic in writer before we are trying to create subscription. Since in
   // callback for subscription we are calling writer_->write(bag_message); and it could happened
   // that callback called before we reached out the line: writer_->create_topic(topic)
