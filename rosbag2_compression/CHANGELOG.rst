@@ -2,6 +2,11 @@
 Changelog for package rosbag2_compression
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix warning from ClassLoader in sequential compression reader and writer (`#1299 <https://github.com/ros2/rosbag2/issues/1299>`_) (`#1316 <https://github.com/ros2/rosbag2/issues/1316>`_)
+* Contributors: mergify[bot]
+
 0.22.0 (2023-04-18)
 -------------------
 * Add message definition read API (`#1292 <https://github.com/ros2/rosbag2/issues/1292>`_)
